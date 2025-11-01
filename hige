@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>酒井羽海のテーマを聴く — 再生ページ</title>
+  <style>
+    /* 全体を中央に寄せる & 背景をオシャレに */
+    body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+           display:flex; height:100vh; margin:0; align-items:center; justify-content:center;
+           background:linear-gradient(180deg,#f0f4f8,#d9e2ec); color:#0b2447; }
+    /* カード（枠）のデザイン */
+    .card { text-align:center; padding:30px; border-radius:16px; 
+           background-color:#ffffff; box-shadow:0 10px 40px rgba(0,0,0,0.15); max-width:400px; }
+    /* 画像のスタイル */
+    .album-art { width:100%; /* カードの幅に合わせる */
+                 max-width:250px; /* 最大サイズを制限 */
+                 height:auto;
+                 border-radius:12px; /* 角を丸くする */
+                 margin-bottom:20px;
+                 box-shadow:0 4px 15px rgba(0,0,0,0.1); /* 軽い影 */ }
+    /* ボタンとタイトル */
+    h2 { margin-top:0; color:#34495e; }
+    button { font-size:18px; padding:16px 30px; border-radius:30px; border:none; cursor:pointer; 
+             background-color:#3498db; color:#ffffff; transition:background-color 0.3s; }
+    button:hover { background-color:#2980b9; }
+    .hint { margin-top:12px; color:#7f8c8d; font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    
+    <img src="albumart.png" alt="アルバムアート" class="album-art" />
+    
+    <h2>酒井羽海のテーマを聴く</h2>
+    <p class="hint">スマホの音量を確認して、下のボタンをタップして再生してください。</p>
+    <button id="playBtn">▶️ 再生する</button>
+    <p class="hint">自動再生に失敗した場合は、ボタンをタップしてください。</p>
+  </div>
+
+  <audio id="audio" preload="auto" src="umitheme.mp3"></audio> 
+
+  <script>
+    const audio = document.getElementById('audio');
+    const btn = document.getElementById('playBtn');
+
+    // ボタンで再生／一時停止
+    btn.addEventListener('click', async () => {
+      if (audio.paused) {
+        try {
+          await audio.play();
+          btn.textContent = '⏸ 停止';
+          btn.style.backgroundColor = '#e74c3c'; // 停止中は赤系に
+        } catch(e) {
+          alert('再生できませんでした。');
+        }
+      } else {
+        audio.pause();
+        btn.textContent = '▶️ 再生する';
+        btn.style.backgroundColor = '#3498db'; // 再生中は青系に
+      }
+    });
+
+    // ページ読み込み時に自動再生を試みる（多くはユーザー操作が必要）
+    window.addEventListener('load', async () => {
+      try {
+        await audio.play();
+        btn.textContent = '⏸ 停止';
+        btn.style.backgroundColor = '#e74c3c';
+      } catch(e) {
+        // 自動再生できなかった場合
+        btn.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.5)'; // ボタンを光らせる
+        btn.textContent = '▶️ 再生する';
+        btn.style.backgroundColor = '#3498db';
+      }
+    });
+  </script>
+</body>
+</html>
